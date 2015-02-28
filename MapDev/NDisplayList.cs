@@ -111,7 +111,7 @@ namespace SharpOcarina
 
         private ulong SetRenderMode(uint C0, uint C1)
         {
-            return (SetOtherMode(GBI.G_SETOTHERMODE_L, GBI.G_MDSFT_RENDERMODE, 29, (C0) | (C1))-4);
+            return SetOtherMode(GBI.G_SETOTHERMODE_L, GBI.G_MDSFT_RENDERMODE, 29, (C0) | (C1));
             // edit: subtract flag 4 to avoid map overlapping - Airikita
         }
 
@@ -463,13 +463,13 @@ namespace SharpOcarina
                 {
                     /* Translucent surface */
                     Helpers.Append64(ref DList, SetCombine(0x167E03, 0xFF0FFDFF));
-                    Helpers.Append64(ref DList, SetRenderMode(0x1C, 0xC81049D8));
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC81049D8));
                 }
                 else if (ThisTexture.HasAlpha == true)
                 {
                     /* Texture with alpha channel */
                     Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFF3F8));
-                    Helpers.Append64(ref DList, SetRenderMode(0x1C, 0xC8103078));
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8103078));
                 }
                 else
                 {
