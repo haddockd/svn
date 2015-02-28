@@ -479,7 +479,7 @@ namespace SharpOcarina
                     else
                         Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFFDF8));
 
-                    Helpers.Append64(ref DList, SetRenderMode(0x1C, 0xC8113078));
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8113078));
                 }
 
                 /* Insert SetPrimColor command */
