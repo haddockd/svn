@@ -1,4 +1,4 @@
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -111,7 +111,8 @@ namespace SharpOcarina
 
         private ulong SetRenderMode(uint C0, uint C1)
         {
-            return SetOtherMode(GBI.G_SETOTHERMODE_L, GBI.G_MDSFT_RENDERMODE, 29, (C0) | (C1));
+            return (SetOtherMode(GBI.G_SETOTHERMODE_L, GBI.G_MDSFT_RENDERMODE, 29, (C0) | (C1))-4);
+            // edit: subtract flag 4 to avoid map overlapping - Airikita
         }
 
         private ulong SetOtherMode(byte Cmd, uint Sft, uint Len_, ulong Data)
