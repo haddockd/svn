@@ -356,3 +356,6 @@ SharpOcarina v0.6 - Zelda OoT Scene Development System
  development.
 
  And so that I don't go overboard with this section, I shall cut it short right here.
+
+ Also thanks to Airikita for working wioth xDaniel and making some changes to the code for hardware 
+ compatible support. Haddockd also made a few edits with the guidance of the GCN network folks.
