@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,6 +47,7 @@ namespace SharpOcarina
                 public int[] MultiTexMaterial = new int[1];
                 public int[] ShiftS = new int[1];
                 public int[] ShiftT = new int[1];
+                public bool[] Animated = new bool[1];
             }
 
             public ZGroupSettings GroupSettings = new ZGroupSettings();
@@ -234,6 +235,7 @@ namespace SharpOcarina
 #endif
                     Helpers.GenericInject(Filename, _Rooms[i].InjectOffset, _Rooms[i].RoomData.ToArray(), _Rooms[i].RoomData.Count);
                 }
+                Console.WriteLine("\nAirikita's Note:\n---------------\nIf you added any animated meshes, you should add the value 00 00 17 00 below the start offset of your new scene address (this value is used in Water Temple... still needs testing).");
             }
 
 #if DEBUG
