@@ -1,4 +1,4 @@
-﻿/*
+/*
  * ObjFile.cs / Simple(?) Wavefront .obj loader and renderer
  * Class for loading and rendering Wavefront .obj files via OpenTK
  * Written in 2011 by xdaniel
@@ -163,7 +163,9 @@ namespace SharpOcarina
             public bool BackfaceCulling = true;
             [XmlIgnore]
             public int MultiTexMaterial = -1, ShiftS = 0, ShiftT = 0;
-            
+            [XmlIgnore]
+            public bool Animated = false;
+
             private List<Triangle> _Tris = new List<Triangle>();
 
             public List<Triangle> Triangles
