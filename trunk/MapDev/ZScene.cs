@@ -264,18 +264,18 @@ namespace SharpOcarina
 #if DEBUG
                 Console.WriteLine("SAVING DATA TO " + SaveRoomTo);
 #endif
-                BinaryWriter BWR = new BinaryWriter(File.OpenWrite(SaveRoomTo));
-                BWR.Write(_Rooms[i].RoomData.ToArray());
-                BWR.Close();
+                /* Airikita's fix to cleanly overwrite a file */
+                /* prevents it from staying as a large file if the new data overwritten is smaller */
+                File.WriteAllBytes(SaveRoomTo, _Rooms[i].RoomData.ToArray());
             }
 
             string SaveSceneTo = Filepath + Helpers.MakeValidFileName(Name) + " (Scene).zscene";
 #if DEBUG
             Console.WriteLine("SAVING DATA TO " + SaveSceneTo);
 #endif
-            BinaryWriter BWS = new BinaryWriter(File.OpenWrite(SaveSceneTo));
-            BWS.Write(SceneData.ToArray());
-            BWS.Close();
+            /* Airikita's fix to cleanly overwrite a file */
+            /* prevents it from staying as a large file if the new data overwritten is smaller */
+            File.WriteAllBytes(SaveSceneTo, SceneData.ToArray());
         }
 
         #endregion
