@@ -1,4 +1,4 @@
-﻿------------------------------------------------------
+ ------------------------------------------------------
 SharpOcarina v0.6 - Zelda OoT Scene Development System
              Written 2011/2012 by xdaniel             
 ------------------------------------------------------
@@ -238,6 +238,12 @@ SharpOcarina v0.6 - Zelda OoT Scene Development System
                    "Collision & Exits" for more about creating and editing them.
 
    - Backface Culling: Determines if backface culling shall be enabled or disabled for this group.
+   
+   - Animated Textures: This will only inject the DList commands for the mesh to animate, but will
+                        not work without the value "00 00 17 00" added at the end of the scene info
+                        in the Scene Table. Refer to: http://wiki.spinout182.com/w/Ocarina_of_Time:_Scene_Table
+                        (0x17 is used in Water Temple for the animated water effect)
+                        - Airikita -
 
    - Multitexture Material: Select the secondary material used for multi-texturing. Select "(none)"
                             to have the converter treat this group as a normal, single-textured
