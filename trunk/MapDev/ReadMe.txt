@@ -240,9 +240,9 @@ SharpOcarina v0.6 - Zelda OoT Scene Development System
    - Backface Culling: Determines if backface culling shall be enabled or disabled for this group.
    
    - Animated Textures: This will only inject the DList commands for the mesh to animate, but will
-                        not work without the value "00 00 17 00" added at the end of the scene info
+                        not work without the value "00 31 00 00" added at the end of the scene info
                         in the Scene Table. Refer to: http://wiki.spinout182.com/w/Ocarina_of_Time:_Scene_Table
-                        (0x17 is used in Water Temple for the animated water effect)
+                        (0x31 is used in Strongbox Warp for the animated walls)
                         - Airikita -
 
    - Multitexture Material: Select the secondary material used for multi-texturing. Select "(none)"
