@@ -1,4 +1,4 @@
-﻿/*
+/*
  * GUI code "disclaimer":
  * This file's code sucks balls and I have no intention to clean it, heavily optimize it, etc.; if anything, it gets minor fixes and additions as needed.
  * The other elements of the project are much more useful, anyway, so glance over this, leave it be and think "well, it works somehow!"
@@ -540,6 +540,12 @@ namespace SharpOcarina
                 GSet.BackfaceCulling.Fill(new bool[] { true });
             }
 
+            if (GSet.Animated.Length != GroupCount)
+            {
+                GSet.Animated = new bool[GroupCount];
+                GSet.Animated.Fill(new bool[] { false });
+            }
+
             if (GSet.MultiTexMaterial.Length != GroupCount)
             {
                 GSet.MultiTexMaterial = new int[GroupCount];
@@ -723,6 +729,7 @@ namespace SharpOcarina
                 comboBox2.SelectedIndex = ((ObjFile.Group)listBox2.SelectedItem).TileT;
                 numericUpDown4.Value = ((ObjFile.Group)listBox2.SelectedItem).PolyType + 1;
                 checkBox3.Checked = ((ObjFile.Group)listBox2.SelectedItem).BackfaceCulling;
+                chbxTexAnimation.Checked = ((ObjFile.Group)listBox2.SelectedItem).Animated;
 
                 ((ZScene.ZRoom)listBox1.SelectedItem).ObjModel.Prepare(false);
             }
@@ -977,6 +984,7 @@ namespace SharpOcarina
                         CurrentScene.Rooms[i].ObjModel.Groups[j].MultiTexMaterial = CurrentScene.Rooms[i].GroupSettings.MultiTexMaterial[j];
                         CurrentScene.Rooms[i].ObjModel.Groups[j].ShiftS = CurrentScene.Rooms[i].GroupSettings.ShiftS[j];
                         CurrentScene.Rooms[i].ObjModel.Groups[j].ShiftT = CurrentScene.Rooms[i].GroupSettings.ShiftT[j];
+                        CurrentScene.Rooms[i].ObjModel.Groups[j].Animated = CurrentScene.Rooms[i].GroupSettings.Animated[j];
                     }
                     CurrentScene.Rooms[i].ObjModel.Prepare();
                 }
@@ -2011,6 +2019,19 @@ namespace SharpOcarina
         }
 
         #endregion
+
+        private void chbxTexAnimation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (listBox2.SelectedItem != null)
+            {
+                ((ObjFile.Group)listBox2.SelectedItem).Animated = chbxTexAnimation.Checked;
+
+                int Index = ((ZScene.ZRoom)listBox1.SelectedItem).ObjModel.Groups.IndexOf(((ObjFile.Group)listBox2.SelectedItem));
+                ((ZScene.ZRoom)listBox1.SelectedItem).GroupSettings.Animated[Index] = ((ObjFile.Group)listBox2.SelectedItem).Animated;
+
+                UpdateGroupSelect();
+            }
+        }
     }
 
     #region Extensions
