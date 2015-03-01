@@ -26,6 +26,8 @@ namespace SharpOcarina
         public Vector3d MinCoordinate = new Vector3d(0, 0, 0);
         public Vector3d MaxCoordinate = new Vector3d(0, 0, 0);
 
+        private bool animationAdded;
+
         public class NVertex
         {
             public Vector3d Position;
@@ -112,6 +114,7 @@ namespace SharpOcarina
         private ulong SetRenderMode(uint C0, uint C1)
         {
             return SetOtherMode(GBI.G_SETOTHERMODE_L, GBI.G_MDSFT_RENDERMODE, 29, (C0) | (C1));
+            // edit: subtract flag 4 to avoid map overlapping - Airikita
         }
 
         private ulong SetOtherMode(byte Cmd, uint Sft, uint Len_, ulong Data)
@@ -427,6 +430,30 @@ namespace SharpOcarina
                 /* Is surface translucent? (needed later) */
                 bool IsTranslucent = ((TintAlpha >> 24) != 255);
 
+                /* Generate SetCombine/RenderMode commands */
+                if (IsTranslucent == true)
+                {
+                    /* Translucent surface */
+                    Helpers.Append64(ref DList, SetCombine(0x167E03, 0xFF0FFDFF));
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC81049D8));
+                }
+                else if (ThisTexture.HasAlpha == true)
+                {
+                    /* Texture with alpha channel */
+                    Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFF3F8));
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8103078));
+                }
+                else
+                {
+                    /* Solid surface */
+                    if (Obj.Groups[Group].MultiTexMaterial != -1)
+                        Helpers.Append64(ref DList, SetCombine(0x267E04, 0x1FFCFDF8));
+                    else
+                        Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFFDF8));
+
+                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8113078));
+                }
+
                 /* Generate GeometryMode commands */
                 //Helpers.Append64(ref DList, ClearGeometryMode(GBI.G_TEXTURE_GEN | GBI.G_TEXTURE_GEN_LINEAR | (Culling == false ? GBI.G_CULL_BACK : 0)));
                 //Helpers.Append64(ref DList, SetGeometryMode(GBI.G_FOG | GBI.G_LIGHTING | (IsOutdoors == true ? 0 : GBI.G_SHADING_SMOOTH)));
@@ -457,40 +484,24 @@ namespace SharpOcarina
                     }
                 }
 
-                /* Generate SetCombine/RenderMode commands */
-                if (IsTranslucent == true)
-                {
-                    /* Translucent surface */
-                    Helpers.Append64(ref DList, SetCombine(0x167E03, 0xFF0FFDFF));
-                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC81049D8));
-                }
-                else if (ThisTexture.HasAlpha == true)
-                {
-                    /* Texture with alpha channel */
-                    Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFF3F8));
-                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8103078));
-                }
-                else
-                {
-                    /* Solid surface */
-                    if (Obj.Groups[Group].MultiTexMaterial != -1)
-                        Helpers.Append64(ref DList, SetCombine(0x267E04, 0x1FFCFDF8));
-                    else
-                        Helpers.Append64(ref DList, SetCombine(0x127E03, 0xFFFFFDF8));
-
-                    Helpers.Append64(ref DList, SetRenderMode(0x18, 0xC8113078));
-                }
-
                 /* Insert SetPrimColor command */
                 Helpers.Append64(ref DList, SetPrimColor(TintAlpha));
+
+                /* Insert animation command (begin) */
+                /* Airikita's Edit */
+                animationAdded = false;  // ensures that animation commands are inserted properly (default)
+                if (Obj.Groups[Group].Animated)
+                {
+                    Helpers.Append64(ref DList, 0xDE00000008000000);
+                }
 
                 /* Parse triangles, generate VTX and TRI commands */
                 /* Very heavily based on code from spinout's .obj importer r13 */
                 foreach (ObjFile.Triangle Tri in Surf.Triangles)
                 {
                     int TriIndex = Surf.Triangles.IndexOf(Tri);
-
                     int[] TriPoints = new int[3];
+                    
                     for (int i = 0; i < 3; i++)
                     {
                         NVertex NewVert = new NVertex(
@@ -577,6 +588,18 @@ namespace SharpOcarina
                         VertList.Clear();
                         AsmTris.Clear();
                         CommToggle = true;
+
+                        /* Insert animation command (end) */
+                        /* Airikita's Edit */
+                        if (Obj.Groups[Group].Animated)
+                        {
+                            if (!animationAdded) // inserted before 2nd 01 command
+                            {
+                                Helpers.Append64(ref DList, 0xE700000000000000);
+                                Helpers.Append64(ref DList, 0xDE00000009000000);
+                                animationAdded = true;
+                            }
+                        }
                     }
                 }
             }
